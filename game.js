@@ -68,9 +68,7 @@ function loadState() {
   const saved = readJSON(SAVE_KEY, null);
   if (saved) {
     state.petals = Number(saved.petals ?? 0);
-    state.plants = Array.isArray(saved.plants) && saved.plants.length
-      ? saved.plants
-      : state.plants;
+    state.plants = Array.isArray(saved.plants) && saved.plants.length ? saved.plants : state.plants;
     state.musicOn = Boolean(saved.musicOn);
     state.rainOn = Boolean(saved.rainOn);
     state.lastSeen = Number(saved.lastSeen ?? Date.now());
@@ -79,12 +77,7 @@ function loadState() {
   const journal = readJSON(JOURNAL_KEY, []);
   if (Array.isArray(journal)) state.journal = journal;
 
-  const elapsed = clamp(
-    (Date.now() - state.lastSeen) / 1000,
-    0,
-    OFFLINE_CAP_SECONDS
-  );
-
+  const elapsed = clamp((Date.now() - state.lastSeen) / 1000, 0, OFFLINE_CAP_SECONDS);
   if (elapsed >= 5) {
     advancePlants(elapsed);
     toast("welcome back. your garden kept growing while you were away.");
@@ -105,33 +98,22 @@ function saveState() {
 
 function advancePlants(seconds) {
   for (const plant of state.plants) {
-    const waterLoss = WATER_DRAIN_PER_SECOND * seconds;
     const waterBeforeGrowth = plant.water;
-    const usableSeconds = Math.min(
-      seconds,
-      waterBeforeGrowth / WATER_DRAIN_PER_SECOND
-    );
-
-    plant.water = clamp(waterBeforeGrowth - waterLoss, 0, 100);
-    plant.growth = clamp(
-      plant.growth + usableSeconds * GROWTH_PER_SECOND,
-      0,
-      100
-    );
+    const usableSeconds = Math.min(seconds, waterBeforeGrowth / WATER_DRAIN_PER_SECOND || 0);
+    plant.water = clamp(waterBeforeGrowth - WATER_DRAIN_PER_SECOND * seconds, 0, 100);
+    plant.growth = clamp(plant.growth + usableSeconds * GROWTH_PER_SECOND, 0, 100);
   }
 }
 
 function plantIcon(plant) {
-  return stageFor(plant.growth) === 0
-    ? "🌱"
-    : SPECIES[plant.species]?.icon || "🌱";
+  return stageFor(plant.growth) === 0 ? "🌱" : SPECIES[plant.species]?.icon || "🌱";
 }
 
 function renderPlants() {
   const container = $("#pot-container");
   if (!container) return;
 
-  const pots = state.plants.map((plant, index) => {
+  container.replaceChildren(...state.plants.map((plant, index) => {
     const button = document.createElement("button");
     button.type = "button";
     button.className = "pot-slot";
@@ -157,20 +139,14 @@ function renderPlants() {
 
     button.append(meter, art, pot, name);
     return button;
-  });
-
-  container.replaceChildren(...pots);
+  }));
 }
 
 function render() {
   $("#petal-count").textContent = String(state.petals);
   $("#rain-button").textContent = `rain: ${state.rainOn ? "on" : "off"}`;
   $("#music-button").textContent = `music: ${state.musicOn ? "on" : "off"}`;
-
-  $("#sky").style.background = state.rainOn
-    ? "linear-gradient(#343b67, #727895 65%, #8b8caa)"
-    : "linear-gradient(#443e78, #c88c8d 65%, #efa87d)";
-
+  $("#sky").style.background = state.rainOn ? "linear-gradient(#343b67, #727895 65%, #8b8caa)" : "linear-gradient(#443e78, #c88c8d 65%, #efa87d)";
   renderPlants();
 }
 
@@ -183,11 +159,13 @@ function interactWithPlant(index) {
     plant.growth = 45;
     plant.water = Math.max(plant.water, 40);
     toast(`gathered 2 petals from your ${SPECIES[plant.species].label}.`);
+    playSfx("pop");
   } else if (plant.water > 82) {
     toast("this one is already well watered.");
   } else {
     plant.water = 100;
     toast(`watered the ${SPECIES[plant.species].label}.`);
+    playSfx("plip");
   }
 
   saveState();
@@ -195,20 +173,14 @@ function interactWithPlant(index) {
 }
 
 function plantSeed() {
-  if (state.plants.length >= MAX_POTS) {
-    toast("the sill is full — gather a blooming plant first.");
-    return;
-  }
-
-  if (state.petals < SEED_COST) {
-    toast("not enough petals — you need 3.");
-    return;
-  }
+  if (state.plants.length >= MAX_POTS) return toast("the sill is full — gather a blooming plant first.");
+  if (state.petals < SEED_COST) return toast("not enough petals — you need 3.");
 
   state.petals -= SEED_COST;
   const species = speciesKeys[Math.floor(Math.random() * speciesKeys.length)];
   state.plants.push({ species, growth: 0, water: 72 });
   toast(`planted a ${SPECIES[species].label} seedling.`);
+  playSfx("pop");
   saveState();
   render();
 }
@@ -217,27 +189,21 @@ function renderJournal() {
   const entries = $("#journal-entries");
   if (!entries) return;
 
-  entries.replaceChildren(
-    ...state.journal.slice(-7).reverse().map((entry) => {
-      const item = document.createElement("article");
-      item.className = "entry";
-
-      const time = document.createElement("time");
-      time.textContent = new Date(entry.t).toLocaleString();
-
-      const text = document.createElement("div");
-      text.textContent = entry.text;
-
-      item.append(time, text);
-      return item;
-    })
-  );
+  entries.replaceChildren(...state.journal.slice(-7).reverse().map((entry) => {
+    const item = document.createElement("article");
+    item.className = "entry";
+    const time = document.createElement("time");
+    time.textContent = new Date(entry.t).toLocaleString();
+    const text = document.createElement("div");
+    text.textContent = entry.text;
+    item.append(time, text);
+    return item;
+  }));
 }
 
 function addJournalEntry() {
   const input = $("#journal-input");
   if (!input) return;
-
   const text = input.value.trim();
   if (!text) return;
 
@@ -251,7 +217,6 @@ function addJournalEntry() {
 function setupStars() {
   const stars = $("#stars");
   if (!stars) return;
-
   for (let index = 0; index < 55; index += 1) {
     const star = document.createElement("i");
     star.style.left = `${Math.random() * 100}%`;
@@ -261,11 +226,88 @@ function setupStars() {
   }
 }
 
+function setupRain() {
+  const rainLayer = document.createElement("div");
+  rainLayer.className = "rain-layer";
+  const sky = $("#sky");
+  if (!sky) return;
+
+  for (let index = 0; index < 70; index += 1) {
+    const drop = document.createElement("i");
+    drop.style.left = `${Math.random() * 100}%`;
+    drop.style.animationDelay = `${Math.random() * 1.5}s`;
+    drop.style.animationDuration = `${0.45 + Math.random() * 0.55}s`;
+    rainLayer.appendChild(drop);
+  }
+  sky.appendChild(rainLayer);
+  updateRain();
+}
+
+function updateRain() {
+  const rainLayer = $(".rain-layer");
+  if (rainLayer) rainLayer.hidden = !state.rainOn;
+}
+
+function getAudioContext() {
+  const AudioCtor = window.AudioContext || window.webkitAudioContext;
+  if (!AudioCtor) return null;
+  if (!window.__lofiAudio) window.__lofiAudio = new AudioCtor();
+  return window.__lofiAudio;
+}
+
+function playTone(frequency, duration, type = "sine", volume = 0.025) {
+  const context = getAudioContext();
+  if (!context) return;
+  const oscillator = context.createOscillator();
+  const gain = context.createGain();
+  const now = context.currentTime;
+  oscillator.type = type;
+  oscillator.frequency.value = frequency;
+  gain.gain.setValueAtTime(volume, now);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+  oscillator.connect(gain).connect(context.destination);
+  oscillator.start(now);
+  oscillator.stop(now + duration);
+}
+
+function playSfx(kind) {
+  if (kind === "plip") {
+    playTone(880, 0.12, "triangle", 0.025);
+    playTone(440, 0.16, "sine", 0.012);
+  } else if (kind === "pop") {
+    playTone(520, 0.14, "sine", 0.025);
+    playTone(780, 0.18, "triangle", 0.018);
+  }
+}
+
+function toggleMusic() {
+  const context = getAudioContext();
+  if (!context) return;
+
+  if (!window.__lofiNodes) {
+    window.__lofiNodes = [174.61, 220, 261.63, 329.63].map((frequency) => {
+      const oscillator = context.createOscillator();
+      const gain = context.createGain();
+      oscillator.type = "sine";
+      oscillator.frequency.value = frequency;
+      gain.gain.value = 0.0001;
+      oscillator.connect(gain).connect(context.destination);
+      oscillator.start();
+      return gain;
+    });
+  }
+
+  window.__lofiNodes.forEach((gain, index) => {
+    gain.gain.setTargetAtTime(state.musicOn ? 0.012 + index * 0.002 : 0.0001, context.currentTime, 0.5);
+  });
+}
+
 function setupEvents() {
   $("#seed-button")?.addEventListener("click", plantSeed);
 
   $("#rain-button")?.addEventListener("click", () => {
     state.rainOn = !state.rainOn;
+    updateRain();
     toast(state.rainOn ? "rain on. stay in." : "rain off.");
     saveState();
     render();
@@ -273,6 +315,7 @@ function setupEvents() {
 
   $("#music-button")?.addEventListener("click", () => {
     state.musicOn = !state.musicOn;
+    toggleMusic();
     toast(state.musicOn ? "lofi on." : "lofi off.");
     saveState();
     render();
@@ -283,14 +326,15 @@ function setupEvents() {
     renderJournal();
     dialog?.showModal();
   });
-
   $("#save-entry")?.addEventListener("click", addJournalEntry);
 }
 
 function init() {
   setupStars();
+  setupRain();
   loadState();
   setupEvents();
+  updateRain();
   render();
   saveState();
 
@@ -302,7 +346,6 @@ function init() {
     render();
     requestAnimationFrame(loop);
   }
-
   requestAnimationFrame(loop);
   setInterval(saveState, 10000);
   window.addEventListener("beforeunload", saveState);
