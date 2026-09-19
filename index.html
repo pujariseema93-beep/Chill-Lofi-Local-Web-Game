@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>lofi garden</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">cozy local-first garden</p>
+          <h1>lofi garden</h1>
+        </div>
+
+        <div class="hud-right">
+          <div class="petal-box" aria-live="polite">
+            <span class="petal-icon">✿</span>
+            <span id="petal-count">0</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="scene-panel">
+        <section class="window" aria-label="Garden window">
+          <div class="sky" id="sky">
+            <div class="moon"></div>
+            <div class="stars" id="stars"></div>
+            <div class="city" id="city"></div>
+          </div>
+
+          <div class="window-frame">
+            <div class="cross-vert"></div>
+            <div class="cross-horiz"></div>
+          </div>
+
+          <div class="sill" aria-label="windowsill">
+            <div class="sill-rail"></div>
+
+            <div class="pots" id="pot-container" aria-live="polite"></div>
+
+            <div class="mug" aria-hidden="true">
+              <div class="steam steam-1"></div>
+              <div class="steam steam-2"></div>
+              <div class="steam steam-3"></div>
+            </div>
+
+            <div class="cat" aria-hidden="true">
+              <div class="cat-body"></div>
+              <div class="cat-head"></div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="panel controls-panel">
+          <div class="toolbar">
+            <button id="seed-button" class="action-button primary" type="button">new seed · 3 petals</button>
+            <button id="rain-button" class="action-button" type="button">rain: off</button>
+            <button id="music-button" class="action-button" type="button">music: off</button>
+            <button id="journal-button" class="action-button" type="button">journal</button>
+          </div>
+
+          <div class="status-box" id="toast" aria-live="polite">
+            water your plants and watch them grow.
+          </div>
+        </aside>
+      </main>
+    </div>
+
+    <dialog id="journal-dialog" class="journal-dialog">
+      <form method="dialog" id="journal-form">
+        <div class="journal-header">
+          <h2>garden journal</h2>
+          <button type="submit" class="close-button" aria-label="Close journal">×</button>
+        </div>
+
+        <div class="entries" id="journal-entries"></div>
+
+        <label class="entry-label" for="journal-input">write a little note</label>
+        <textarea id="journal-input" maxlength="140" rows="4" placeholder="The rain sounds like a lullaby..."></textarea>
+
+        <div class="journal-actions">
+          <button type="button" class="action-button secondary" id="save-entry">save note</button>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="game.js"></script>
+  </body>
+</html>
