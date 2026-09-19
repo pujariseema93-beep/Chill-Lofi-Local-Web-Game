@@ -1,0 +1,55 @@
+:root {
+  --wall: #332a3a;
+  --ink: #f0e6df;
+  --muted: #b7a8ad;
+  --wood: #74503d;
+  --wood-dark: #4f352b;
+  --panel: rgba(30, 23, 34, .78);
+  --accent: #c99ad8;
+  --accent-dark: #89629d;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; min-height: 100vh; color: var(--ink); font: 15px "DM Sans", sans-serif; background: radial-gradient(circle at 20% 15%, #58445c, transparent 34%), var(--wall); }
+button, textarea { font: inherit; }
+button { cursor: pointer; }
+.page-shell { width: min(1120px, 100%); margin: auto; padding: 24px; }
+.topbar { display: flex; align-items: end; justify-content: space-between; margin-bottom: 14px; }
+.eyebrow { margin: 0 0 4px; color: var(--accent); font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+h1, h2 { margin: 0; font-family: "Space Grotesk", sans-serif; letter-spacing: -.04em; }
+h1 { font-size: clamp(2rem, 6vw, 3.3rem); }
+.petal-box { padding: 8px 14px; border: 1px solid rgba(255,255,255,.14); border-radius: 999px; background: var(--panel); font-weight: 700; }
+.petal-icon { color: #f4a8c8; margin-right: 6px; }
+.scene-panel { overflow: hidden; border: 1px solid rgba(255,255,255,.12); border-radius: 18px; background: var(--panel); box-shadow: 0 24px 80px rgba(0,0,0,.25); }
+.window { position: relative; height: min(62vw, 510px); min-height: 390px; overflow: hidden; background: var(--wood-dark); }
+.sky { position: absolute; inset: 16px 18px 82px; overflow: hidden; background: linear-gradient(#443e78, #c88c8d 65%, #efa87d); transition: background 1s; }
+.moon { position: absolute; top: 34px; right: 10%; width: 46px; height: 46px; border-radius: 50%; background: #f3ebce; box-shadow: 0 0 35px #f3dca9; }
+.stars i { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: #fff5dd; opacity: .8; }
+.city { position: absolute; inset: auto 0 0; height: 35%; background: repeating-linear-gradient(90deg, #25253e 0 65px, transparent 65px 77px); opacity: .8; }
+.city::after { content: ""; position: absolute; inset: 25% 0 0; background: repeating-linear-gradient(90deg, transparent 0 15px, #e8bd7a 15px 20px, transparent 20px 37px); opacity: .6; }
+.window-frame { position: absolute; inset: 0; border: 16px solid var(--wood); pointer-events: none; box-shadow: inset 0 0 0 3px var(--wood-dark); }
+.cross-vert, .cross-horiz { position: absolute; background: var(--wood); box-shadow: 0 0 0 2px var(--wood-dark); }
+.cross-vert { top: 0; bottom: 82px; left: 50%; width: 10px; transform: translateX(-50%); }
+.cross-horiz { left: 0; right: 0; top: 48%; height: 9px; }
+.sill { position: absolute; right: 0; bottom: 34px; left: 0; height: 86px; background: repeating-linear-gradient(0deg, #573a2e 0 5px, #684532 5px 10px); border-top: 8px solid #8c6349; }
+.sill-rail { position: absolute; right: 0; bottom: -16px; left: 0; height: 16px; background: #412a24; }
+.pots { position: absolute; right: 17%; bottom: 48px; left: 17%; display: flex; justify-content: space-between; align-items: end; gap: 12px; }
+.pot-slot { position: relative; width: 100px; min-width: 68px; height: 145px; border: 0; color: var(--ink); background: transparent; text-align: center; }
+.pot-slot:focus-visible { outline: 2px solid #f4d58d; outline-offset: 4px; }
+.plant-art { display: block; height: 86px; color: #8cc58b; font-size: 58px; line-height: 86px; text-shadow: 2px 3px 0 #365a43; transition: transform .2s; }
+.pot-slot:hover .plant-art { transform: translateY(-4px) rotate(-2deg); }
+.pot { height: 51px; border-radius: 8px 8px 22px 22px; background: #b36752; box-shadow: inset 9px 0 rgba(80,32,35,.17); }
+.pot::before { content: ""; display: block; height: 11px; border-radius: 7px; background: #553c34; transform: translateY(-4px); }
+.plant-name { display: block; margin-top: 5px; color: var(--muted); font-size: 11px; }
+.water-meter { position: absolute; top: 0; right: 0; left: 0; height: 5px; overflow: hidden; border-radius: 4px; background: rgba(0,0,0,.3); }
+.water-meter span { display: block; height: 100%; background: #83c4e7; }
+.mug, .cat { position: absolute; z-index: 2; bottom: 52px; }
+.mug { left: 7%; width: 38px; height: 36px; border-radius: 5px 5px 12px 12px; background: #d3c1ba; box-shadow: inset 0 7px #5d4037; }
+.steam { position: absolute; top: -30px; width: 2px; height: 25px; background: #d5d1d2; opacity: .5; animation: float 2.4s ease-in-out infinite; }
+.steam-1 { left: 8px; }.steam-2 { left: 18px; animation-delay: .6s; }.steam-3 { left: 28px; animation-delay: 1.1s; }
+.cat { right: 5%; width: 120px; height: 42px; border-radius: 50%; background: #554d62; }.cat-head { position: absolute; right: 4px; top: -15px; width: 35px; height: 35px; border-radius: 50%; background: #665a70; }.cat-head::before, .cat-head::after { content: ""; position: absolute; top: -9px; border-bottom: 13px solid #665a70; }.cat-head::before { left: 2px; border-right: 10px solid transparent; }.cat-head::after { right: 2px; border-left: 10px solid transparent; }
+.controls-panel { display: flex; gap: 16px; align-items: center; justify-content: space-between; padding: 18px 22px; background: rgba(24,18,28,.84); }
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px; }.action-button { padding: 9px 12px; border: 1px solid rgba(255,255,255,.16); border-radius: 8px; color: var(--ink); background: rgba(255,255,255,.07); }.action-button:hover { background: rgba(255,255,255,.16); }.action-button.primary { color: #2d2232; border-color: #d8a6dd; background: var(--accent); font-weight: 700; }.status-box { color: var(--muted); text-align: right; }
+.journal-dialog { width: min(620px, calc(100% - 30px)); padding: 0; border: 0; border-radius: 14px; color: #3e3340; background: #f6ead7; box-shadow: 0 25px 80px #0008; }.journal-dialog::backdrop { background: #150e1a99; backdrop-filter: blur(3px); }.journal-dialog form { padding: 24px; }.journal-header { display: flex; justify-content: space-between; align-items: center; }.close-button { border: 0; color: #6b5965; background: transparent; font-size: 28px; }.entries { max-height: 230px; overflow: auto; margin: 20px 0; }.entry { padding: 10px 0; border-bottom: 1px solid #dbc9b9; }.entry time { display: block; color: #9a8279; font-size: 12px; }.entry-label { display: block; margin-bottom: 6px; font-weight: 700; }.journal-dialog textarea { width: 100%; resize: vertical; padding: 10px; border: 1px solid #d2bdac; border-radius: 8px; background: #fffaf1; }.journal-actions { margin-top: 12px; text-align: right; }.secondary { color: #fff; background: #765582; }
+@keyframes float { 50% { transform: translateY(-7px); opacity: .2; } }
+@media (max-width: 650px) { .page-shell { padding: 14px; }.window { min-height: 430px; }.pots { right: 7%; left: 7%; gap: 4px; }.pot-slot { width: 19%; }.plant-name { font-size: 9px; }.cat { right: 1%; transform: scale(.75); transform-origin: bottom right; }.controls-panel { align-items: stretch; flex-direction: column; }.status-box { text-align: left; } }
