@@ -23,10 +23,19 @@ h1 { font-size: clamp(2rem, 6vw, 3.3rem); }
 .scene-panel { overflow: hidden; border: 1px solid rgba(255,255,255,.12); border-radius: 18px; background: var(--panel); box-shadow: 0 24px 80px rgba(0,0,0,.25); }
 .window { position: relative; height: min(62vw, 510px); min-height: 390px; overflow: hidden; background: var(--wood-dark); }
 .sky { position: absolute; inset: 16px 18px 82px; overflow: hidden; background: linear-gradient(#443e78, #c88c8d 65%, #efa87d); transition: background 1s; }
+.sky::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,.16), transparent 35%, rgba(20,17,23,.2));
+  pointer-events: none;
+}
 .moon { position: absolute; top: 34px; right: 10%; width: 46px; height: 46px; border-radius: 50%; background: #f3ebce; box-shadow: 0 0 35px #f3dca9; }
 .stars i { position: absolute; width: 3px; height: 3px; border-radius: 50%; background: #fff5dd; opacity: .8; }
 .city { position: absolute; inset: auto 0 0; height: 35%; background: repeating-linear-gradient(90deg, #25253e 0 65px, transparent 65px 77px); opacity: .8; }
 .city::after { content: ""; position: absolute; inset: 25% 0 0; background: repeating-linear-gradient(90deg, transparent 0 15px, #e8bd7a 15px 20px, transparent 20px 37px); opacity: .6; }
+.rain-layer { position: absolute; z-index: 3; inset: 0; overflow: hidden; pointer-events: none; }
+.rain-layer i { position: absolute; top: -24px; width: 1px; height: 18px; background: rgba(190, 218, 246, .72); transform: rotate(16deg); animation: rain-fall linear infinite; }
 .window-frame { position: absolute; inset: 0; border: 16px solid var(--wood); pointer-events: none; box-shadow: inset 0 0 0 3px var(--wood-dark); }
 .cross-vert, .cross-horiz { position: absolute; background: var(--wood); box-shadow: 0 0 0 2px var(--wood-dark); }
 .cross-vert { top: 0; bottom: 82px; left: 50%; width: 10px; transform: translateX(-50%); }
@@ -52,4 +61,6 @@ h1 { font-size: clamp(2rem, 6vw, 3.3rem); }
 .toolbar { display: flex; flex-wrap: wrap; gap: 8px; }.action-button { padding: 9px 12px; border: 1px solid rgba(255,255,255,.16); border-radius: 8px; color: var(--ink); background: rgba(255,255,255,.07); }.action-button:hover { background: rgba(255,255,255,.16); }.action-button.primary { color: #2d2232; border-color: #d8a6dd; background: var(--accent); font-weight: 700; }.status-box { color: var(--muted); text-align: right; }
 .journal-dialog { width: min(620px, calc(100% - 30px)); padding: 0; border: 0; border-radius: 14px; color: #3e3340; background: #f6ead7; box-shadow: 0 25px 80px #0008; }.journal-dialog::backdrop { background: #150e1a99; backdrop-filter: blur(3px); }.journal-dialog form { padding: 24px; }.journal-header { display: flex; justify-content: space-between; align-items: center; }.close-button { border: 0; color: #6b5965; background: transparent; font-size: 28px; }.entries { max-height: 230px; overflow: auto; margin: 20px 0; }.entry { padding: 10px 0; border-bottom: 1px solid #dbc9b9; }.entry time { display: block; color: #9a8279; font-size: 12px; }.entry-label { display: block; margin-bottom: 6px; font-weight: 700; }.journal-dialog textarea { width: 100%; resize: vertical; padding: 10px; border: 1px solid #d2bdac; border-radius: 8px; background: #fffaf1; }.journal-actions { margin-top: 12px; text-align: right; }.secondary { color: #fff; background: #765582; }
 @keyframes float { 50% { transform: translateY(-7px); opacity: .2; } }
+@keyframes rain-fall { from { transform: translate3d(0, -24px, 0) rotate(16deg); } to { transform: translate3d(-42px, 560px, 0) rotate(16deg); } }
+@media (prefers-reduced-motion: reduce) { .rain-layer i, .steam { animation-play-state: paused; } }
 @media (max-width: 650px) { .page-shell { padding: 14px; }.window { min-height: 430px; }.pots { right: 7%; left: 7%; gap: 4px; }.pot-slot { width: 19%; }.plant-name { font-size: 9px; }.cat { right: 1%; transform: scale(.75); transform-origin: bottom right; }.controls-panel { align-items: stretch; flex-direction: column; }.status-box { text-align: left; } }
