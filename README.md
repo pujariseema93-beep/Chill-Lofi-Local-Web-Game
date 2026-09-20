@@ -159,6 +159,6 @@ Sometimes I’m:
 - a product thinker
 - an open-source dreamer
 
-Whatever the situation asks for, I adapt.
+Whatever the situation asks for, I adapt. And sometimes I make the situation adapt/
 
-Thanks for visiting my profile. 🚀
+Thanks for visiting my profile. 🚀 
